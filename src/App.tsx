@@ -1,9 +1,7 @@
-import styles from './styles/App.module.css';
+import { RealBungeobbang } from './components/RealBungeobbang';
 
 function App() {
-  return (
-      <div></div>
-  );
+  return <RealBungeobbang />;
 }
 
-export default App
+export default App;
