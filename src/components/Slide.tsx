@@ -1,10 +1,14 @@
-import { ReactNode } from 'react';
-import styles from './Slide.module.css';
-
 interface Props {
-  children?: ReactNode;
+  src: string;
 }
 
-export function Slide({ children }: Props) {
-  return <div className={styles.slide}>{children}</div>;
+export function Slide({ src }: Props) {
+  return (
+    <img
+      src={src}
+      style={{
+        width: '100vw',
+      }}
+    />
+  );
 }
