@@ -12,7 +12,9 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "dompurify": "^3.2.4",
+    "gsap": "^3.12.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.4.0"

@@ -22,21 +22,6 @@
   z-index: 1;
   width: 55px;
   height: 128px;
-  animation: moving 3s alternate infinite ease-in-out;
-  animation-play-state: paused;
-}
-
-.fork.moving {
-  animation-play-state: running;
-}
-
-@keyframes moving {
-  0% {
-    left: 50px;
-  }
-  100% {
-    left: calc(100% - 50px - 55px);
-  }
 }
 
 .button {

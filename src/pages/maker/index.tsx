@@ -1,5 +1,5 @@
 import Bungeo from '@/assets/Bungeo.png';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
 
 import head1 from '@/assets/temp/head1.png';
@@ -9,13 +9,64 @@ import head4 from '@/assets/temp/head4.png';
 import SelectGoButton from '@/assets/SelectGoButton.png';
 import SelectStopButton from '@/assets/SelectStopButton.png';
 import Fork from '@/assets/Fork.png';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(useGSAP);
+
+async function delay(seconds: number) {
+  return gsap.delayedCall(seconds, () => {});
+}
 
 export default function BungeobbangMaker() {
   const [isStarted, setIsStarted] = useState(false);
   const [isGoing, setIsGoing] = useState(false);
+  const selectRef = useRef<HTMLDivElement>(null);
+  const forkRef = useRef<HTMLImageElement>(null);
+  const forkTween = useRef<gsap.core.Tween | null>(null);
+
+  useGSAP(() => {
+    if (isGoing && selectRef.current) {
+      const widthOfSelect = selectRef.current.offsetWidth;
+      forkTween.current = gsap.fromTo(
+        `.${styles.fork}`,
+        {
+          left: '50px',
+        },
+        {
+          left: `${widthOfSelect - 50}px`,
+          repeat: -1,
+          duration: 3,
+          ease: 'power1.inOut',
+          yoyo: true,
+        }
+      );
+    }
+  }, [isGoing]);
+
+  const findNearestOption = useCallback(() => {
+    if (selectRef.current && forkRef.current) {
+      const selectOptions = Array.from(selectRef.current.children);
+      const forkBounds = forkRef.current.getBoundingClientRect();
+      const forkPosition = forkBounds.left + forkBounds.width / 2;
+      const nearestOption = selectOptions.reduce<[number, Element]>(
+        ([prevDistance, prevOption], option) => {
+          const optionBounds = option.getBoundingClientRect();
+          const currPosition = optionBounds.left + optionBounds.width / 2;
+          const currDistance = Math.abs(currPosition - forkPosition);
+          return currDistance < prevDistance
+            ? [currDistance, option]
+            : [prevDistance, prevOption];
+        },
+        [Infinity, selectOptions[0]]
+      );
+      return nearestOption[1];
+    }
+    throw new Error('SelectRef or ForkRef is not defined');
+  }, []);
 
   const handleKeyboard = useCallback(
-    (e: KeyboardEvent) => {
+    async (e: KeyboardEvent) => {
       if (e.code === 'Space') {
         if (!isStarted) {
           e.preventDefault();
@@ -26,13 +77,23 @@ export default function BungeobbangMaker() {
         } else if (isGoing) {
           e.preventDefault();
           setIsGoing(false);
-          setTimeout(() => {
-            setIsGoing(true);
-          }, 1000);
+          if (forkTween.current) {
+            forkTween.current.kill();
+          }
+          const nearestOption = findNearestOption() as HTMLDivElement;
+          nearestOption.style.background = 'red';
+          await delay(0.5);
+          await gsap.timeline().to(`.${styles.fork}`, {
+            left: '50px',
+            ease: 'linear',
+            duration: 0.5,
+          });
+          await delay(0.5);
+          setIsGoing(true);
         }
       }
     },
-    [isGoing, isStarted]
+    [findNearestOption, isGoing, isStarted]
   );
 
   useEffect(() => {
@@ -54,7 +115,7 @@ export default function BungeobbangMaker() {
         <div className={styles.frame}>
           {isStarted && (
             <>
-              <img className={`${styles.fork} ${isGoing && styles.moving}`} src={Fork} />
+              <img className={styles.fork} src={Fork} ref={forkRef} />
               {isGoing ? (
                 <img className={styles.button} src={SelectGoButton} />
               ) : (
@@ -65,6 +126,7 @@ export default function BungeobbangMaker() {
           <div className={styles.frame__upper}>
             <div
               className={`${styles.select} ${isStarted ? styles.fadeLeft : ''}`}
+              ref={selectRef}
             >
               <div className={styles.select__option}>
                 <img src={head1} alt="" />
