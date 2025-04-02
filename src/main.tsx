@@ -6,6 +6,7 @@ import BungeobbangMold from './pages/mold';
 import BungeobbangSlides from './pages/slides';
 import './styles/fonts.css';
 import './styles/globals.css';
+import './styles/animations.css';
 
 const router = createBrowserRouter([
   {
