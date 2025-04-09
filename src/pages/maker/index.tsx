@@ -6,6 +6,18 @@ import head1 from '@/assets/temp/head1.png';
 import head2 from '@/assets/temp/head2.png';
 import head3 from '@/assets/temp/head3.png';
 import head4 from '@/assets/temp/head4.png';
+import body1 from '@/assets/temp/body1.png';
+import body2 from '@/assets/temp/body2.png';
+import body3 from '@/assets/temp/body3.png';
+import body4 from '@/assets/temp/body4.png';
+import fin1 from '@/assets/temp/fin1.png';
+import fin2 from '@/assets/temp/fin2.png';
+import fin3 from '@/assets/temp/fin3.png';
+import fin4 from '@/assets/temp/fin4.png';
+import tail1 from '@/assets/temp/tail1.png';
+import tail2 from '@/assets/temp/tail2.png';
+import tail3 from '@/assets/temp/tail3.png';
+import tail4 from '@/assets/temp/tail4.png';
 import SelectGoButton from '@/assets/SelectGoButton.png';
 import SelectStopButton from '@/assets/SelectStopButton.png';
 import Fork from '@/assets/Fork.png';
@@ -24,6 +36,20 @@ export default function BungeobbangMaker() {
   const selectRef = useRef<HTMLDivElement>(null);
   const forkRef = useRef<HTMLImageElement>(null);
   const forkTween = useRef<gsap.core.Tween | null>(null);
+  const bungeoParts = [
+    [head1, head2, head3, head4],
+    [body1, body2, body3, body4],
+    [fin1, fin2, fin3, fin4],
+    [tail1, tail2, tail3, tail4],
+  ];
+  const [selectedBungeoParts, setSelectedBungeoParts] = useState([
+    '',
+    '',
+    '',
+    '',
+  ]);
+  const [stage, setStage] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
 
   useGSAP(() => {
     if (isGoing && selectRef.current) {
@@ -81,19 +107,32 @@ export default function BungeobbangMaker() {
             forkTween.current.kill();
           }
           const nearestOption = findNearestOption() as HTMLDivElement;
-          nearestOption.style.background = 'red';
-          await delay(0.5);
-          await gsap.timeline().to(`.${styles.fork}`, {
-            left: '50px',
-            ease: 'linear',
-            duration: 0.5,
+          setSelectedBungeoParts((prev) => {
+            const newParts = [...prev];
+            newParts[stage] = nearestOption.querySelector('img')!.src;
+            return newParts;
           });
+          nearestOption.style.background = 'red';
+
           await delay(0.5);
-          setIsGoing(true);
+          if (stage < 3) {
+            setStage((prev) => prev + 1);
+            await gsap.timeline().to(`.${styles.fork}`, {
+              left: '50px',
+              ease: 'linear',
+              duration: 0.5,
+            });
+            await delay(0.5);
+            setIsGoing(true);
+          } else {
+            setTimeout(() => {
+              setIsFinished(true);
+            }, 500);
+          }
         }
       }
     },
-    [findNearestOption, isGoing, isStarted]
+    [findNearestOption, isGoing, isStarted, stage]
   );
 
   useEffect(() => {
@@ -105,48 +144,46 @@ export default function BungeobbangMaker() {
 
   return (
     <main>
-      <div className={styles.page}>
-        <div className={styles.title}>
-          <b className={styles.title__left}>나만의</b>
-          <b className={styles.title__shadow}>나만의</b>
-          <b className={styles.title__right}>붕어빵</b>
-        </div>
-
-        <div className={styles.frame}>
-          {isStarted && (
-            <>
-              <img className={styles.fork} src={Fork} ref={forkRef} />
-              {isGoing ? (
-                <img className={styles.button} src={SelectGoButton} />
-              ) : (
-                <img className={styles.button} src={SelectStopButton} />
-              )}
-            </>
-          )}
-          <div className={styles.frame__upper}>
-            <div
-              className={`${styles.select} ${isStarted ? styles.fadeLeft : ''}`}
-              ref={selectRef}
-            >
-              <div className={styles.select__option}>
-                <img src={head1} alt="" />
-              </div>
-              <div className={styles.select__option}>
-                <img src={head2} alt="" />
-              </div>
-              <div className={styles.select__option}>
-                <img src={head3} alt="" />
-              </div>
-              <div className={styles.select__option}>
-                <img src={head4} alt="" />
-              </div>
+      <div className={`${styles.page} ${isFinished && styles.page__finished}`}>
+        {isFinished && <div className={styles.finished}>INFRINGEMENT</div>}
+        {!isFinished && (
+          <>
+            <div className={styles.title}>
+              <b className={styles.title__left}>나만의</b>
+              <b className={styles.title__shadow}>나만의</b>
+              <b className={styles.title__right}>붕어빵</b>
             </div>
-          </div>
-          <div className={styles.frame__lower} />
-          {isStarted || (
-            <div className={styles.frame__modal}>Press space to start</div>
-          )}
-        </div>
+
+            <div className={styles.frame}>
+              {isStarted && (
+                <>
+                  <img className={styles.fork} src={Fork} ref={forkRef} />
+                  {isGoing ? (
+                    <img className={styles.button} src={SelectGoButton} />
+                  ) : (
+                    <img className={styles.button} src={SelectStopButton} />
+                  )}
+                </>
+              )}
+              <div className={styles.frame__upper}>
+                <div
+                  className={`${styles.select} ${isStarted ? styles.fadeLeft : ''}`}
+                  ref={selectRef}
+                >
+                  {bungeoParts[stage].map((part) => (
+                    <div className={styles.select__option} key={part}>
+                      <img src={part} alt="" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className={styles.frame__lower} />
+              {isStarted || (
+                <div className={styles.frame__modal}>Press space to start</div>
+              )}
+            </div>
+          </>
+        )}
 
         <div className={styles.rail}>
           <div
@@ -154,6 +191,17 @@ export default function BungeobbangMaker() {
           >
             <img className={styles.rail__bungeoImg} alt="" src={Bungeo} />
           </div>
+          {selectedBungeoParts.map((part, index) => {
+            if (part === '') return null;
+            return (
+              <img
+                key={part}
+                className={`${styles.rail__part} ${styles[`rail__part${index + 1}`]}`}
+                src={part}
+                alt=""
+              />
+            );
+          })}
         </div>
       </div>
     </main>
