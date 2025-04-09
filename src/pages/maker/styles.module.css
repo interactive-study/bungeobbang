@@ -15,6 +15,19 @@
   text-align: left;
 }
 
+.page__finished {
+  justify-content: center;
+  background-color: #111016;
+}
+
+.finished {
+  color: red;
+  font-weight: 900;
+  font-size: 190px;
+  font-family: sans-serif;
+  text-align: center;
+}
+
 .fork {
   position: absolute;
   top: 231px;
@@ -208,4 +221,36 @@
   width: 366px;
   height: 300px;
   object-fit: cover;
+}
+
+.rail__part {
+  filter: invert(100%) contrast(200%);
+}
+
+.rail__part1 {
+  position: absolute;
+  top: 680px;
+  left: calc(50% - 150px);
+  width: 150px;
+}
+
+.rail__part2 {
+  position: absolute;
+  top: 690px;
+  left: calc(50% - 30px);
+  width: 120px;
+}
+
+.rail__part3 {
+  position: absolute;
+  top: 680px;
+  left: calc(50% - 30px);
+  width: 80px;
+}
+
+.rail__part4 {
+  position: absolute;
+  top: 700px;
+  left: calc(50% + 80px);
+  width: 70px;
 }
