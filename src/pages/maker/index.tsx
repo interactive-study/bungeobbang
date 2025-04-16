@@ -1,6 +1,7 @@
 import Bungeo from '@/assets/Bungeo.png';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
+import * as Tone from 'tone';
 
 import head1 from '@/assets/temp/head1.png';
 import head2 from '@/assets/temp/head2.png';
@@ -96,6 +97,9 @@ export default function BungeobbangMaker() {
       if (e.code === 'Space') {
         if (!isStarted) {
           e.preventDefault();
+          Tone.start();
+          const synth = new Tone.Synth().toDestination();
+          synth.triggerAttackRelease("C4", "8n");
           setIsStarted(true);
           setTimeout(() => {
             setIsGoing(true);
@@ -107,6 +111,10 @@ export default function BungeobbangMaker() {
             forkTween.current.kill();
           }
           const nearestOption = findNearestOption() as HTMLDivElement;
+          const synth = new Tone.Synth().toDestination();
+          const noteMap = ["C4", "D4", "F4", "G4"];
+          const note = noteMap[stage] ?? "C4";
+          synth.triggerAttackRelease(note, "8n");
           setSelectedBungeoParts((prev) => {
             const newParts = [...prev];
             newParts[stage] = nearestOption.querySelector('img')!.src;
@@ -127,6 +135,8 @@ export default function BungeobbangMaker() {
           } else {
             setTimeout(() => {
               setIsFinished(true);
+              const synth = new Tone.PolySynth().toDestination();
+              synth.triggerAttackRelease(["C4", "F#4", "B4"], "2n");
             }, 500);
           }
         }
