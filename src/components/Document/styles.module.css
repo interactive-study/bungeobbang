@@ -1,0 +1,23 @@
+.Document {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: black;
+  padding: 100px 0 0 100px;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  font-size: 22px;
+  line-height: 1.6;
+  font-family: monospace;
+}
+
+.red {
+  color: red;
+}
+.yellow {
+  color: yellow;
+}
+.blue {
+  color: blue;
+}

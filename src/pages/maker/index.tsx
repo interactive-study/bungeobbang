@@ -1,5 +1,5 @@
 import Bungeo from '@/assets/Bungeo.png';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import styles from './styles.module.css';
 import * as Tone from 'tone';
 
@@ -24,6 +24,7 @@ import SelectStopButton from '@/assets/SelectStopButton.png';
 import Fork from '@/assets/Fork.png';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { InfringementContext } from '@/contexts/InfringementContext';
 
 gsap.registerPlugin(useGSAP);
 
@@ -51,6 +52,14 @@ export default function BungeobbangMaker() {
   ]);
   const [stage, setStage] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+
+  /**
+   * ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution
+   */
+  const { infringe } = useContext(InfringementContext);
+  /**
+   * ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution ! Use with caution
+   */
 
   useGSAP(() => {
     if (isGoing && selectRef.current) {
@@ -99,7 +108,7 @@ export default function BungeobbangMaker() {
           e.preventDefault();
           Tone.start();
           const synth = new Tone.Synth().toDestination();
-          synth.triggerAttackRelease("C4", "8n");
+          synth.triggerAttackRelease('C4', '8n');
           setIsStarted(true);
           setTimeout(() => {
             setIsGoing(true);
@@ -112,9 +121,9 @@ export default function BungeobbangMaker() {
           }
           const nearestOption = findNearestOption() as HTMLDivElement;
           const synth = new Tone.Synth().toDestination();
-          const noteMap = ["C4", "D4", "F4", "G4"];
-          const note = noteMap[stage] ?? "C4";
-          synth.triggerAttackRelease(note, "8n");
+          const noteMap = ['C4', 'D4', 'F4', 'G4'];
+          const note = noteMap[stage] ?? 'C4';
+          synth.triggerAttackRelease(note, '8n');
           setSelectedBungeoParts((prev) => {
             const newParts = [...prev];
             newParts[stage] = nearestOption.querySelector('img')!.src;
@@ -136,7 +145,7 @@ export default function BungeobbangMaker() {
             setTimeout(() => {
               setIsFinished(true);
               const synth = new Tone.PolySynth().toDestination();
-              synth.triggerAttackRelease(["C4", "F#4", "B4"], "2n");
+              synth.triggerAttackRelease(['C4', 'F#4', 'B4'], '2n');
             }, 500);
           }
         }
@@ -151,6 +160,12 @@ export default function BungeobbangMaker() {
       window.removeEventListener('keydown', handleKeyboard);
     };
   }, [handleKeyboard]);
+
+  useEffect(() => {
+    if (isFinished) {
+      infringe(selectedBungeoParts as [string, string, string, string]);
+    }
+  }, [isFinished, selectedBungeoParts]);
 
   return (
     <main>
