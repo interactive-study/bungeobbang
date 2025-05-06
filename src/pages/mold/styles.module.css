@@ -1,16 +1,183 @@
-.upload_button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  background: white;
-  border: none;
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
 }
 
 .bungeo_image {
   position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
   opacity: 0.3;
+  min-width: 50vw;
+  max-width: 80vw;
+  min-height: 50vh;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.button_container {
+  display: flex;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.upload_button {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  border: none;
+  border-radius: 40px;
+  padding: 20px 40px;
+  width: 200px;
+  overflow: hidden;
+}
+
+.upload_button:hover .liquid {
+  top: -120px;
+}
+
+.uplaod_button_text {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 20px;
+  font-family: 'UhBee Hyeki';
+  letter-spacing: 8px;
+}
+
+.liquid {
+  position: absolute;
+  top: -80px;
+  left: 0;
+  transition: 0.5s;
+  box-shadow: inset 0 0 50px #a46d33;
+  background: #d28c41;
+  width: 200px;
+  height: 200px;
+}
+
+.liquid::before,
+.liquid::after {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -75%);
+  width: 200%;
+  height: 200%;
+  content: '';
+}
+
+.liquid::before {
+  animation: flow 5s linear infinite;
+  border-radius: 45%;
+  background: rgb(249, 249, 249);
+}
+
+.liquid::after {
+  animation: flow 10s linear infinite;
+  border-radius: 40%;
+  background: rgba(229, 229, 229, 0.5);
+}
+
+@keyframes flow {
+  0% {
+    transform: translate(-50%, -75%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -75%) rotate(360deg);
+  }
+}
+
+.normal_button {
+  position: relative;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  border-radius: 40px;
+  background-color: #d28c41;
+  padding: 10px 20px;
+  width: auto;
+  height: 40px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'UhBee Hyeki';
+  letter-spacing: 4px;
+}
+
+.normal_button:hover {
+  background-color: #a46d33;
+}
+
+.warn_button_active,
+.warn_button_active:hover {
+  background-color: #e74c3c;
+  font-family: Arial;
+  letter-spacing: 4px;
+}
+
+.normal_button_text {
+  color: #fff;
+  font-size: 14px;
+  font-family: 'UhBee Hyeki';
+  letter-spacing: 4px;
+}
+
+.board_container {
+  display: inline-block;
+  position: relative;
+}
+
+.warn_board {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background: #000000;
+  padding: 6px 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.warn_board_img {
+  max-width: 300px;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.cure_button {
+  display: flex;
+  position: fixed;
+  right: 40px;
+  bottom: 154px;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: rgb(0, 202, 98);
+  padding: 10px 20px;
+  width: auto;
+  height: 40px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: 'UhBee Hyeki';
+  letter-spacing: 4px;
+}
+
+.cure_button:hover {
+  opacity: 1;
+}
+
+.cure_button:active {
+  transform: translateY(-16px);
 }
