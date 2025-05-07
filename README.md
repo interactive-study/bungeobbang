@@ -18,4 +18,4 @@ npm run start
 - [changin](https://fe01bc63.bungeobbang.pages.dev/)
 - [minkyu](https://994e30f3.bungeobbang.pages.dev/)
 - pia
-- [hyunji](https://6b52642c.bungeobbang.pages.dev/)
+- [hyeonji](https://6b52642c.bungeobbang.pages.dev/)
